@@ -38,7 +38,7 @@ export const Message = () => {
           <div key={message._id} className="message">
             <span>{message.username}</span>
             <p>{message.messageText}</p>
-            <small>{ moment(message.createdAt.toString()).format('DD/MM/YYYY') }</small>
+            <small>{ moment(message.createdAt.toString()).format('DD/MM/YYYY - HH:mm') }</small>
           </div>
         ))}
       </div>
