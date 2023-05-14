@@ -1,13 +1,16 @@
-import React from "react";
-import { useFind, useSubscribe } from "meteor/react-meteor-data";
-import { MessagesCollection } from "../api/collections/messages-collection";
-import moment from "moment/moment";
+import badWords from "bad-words";
 import { Meteor } from "meteor/meteor";
+import { useFind, useSubscribe } from "meteor/react-meteor-data";
+import moment from "moment/moment";
+import React from "react";
+import { MessagesCollection } from "../api/collections/messages-collection";
 
 export const Message = () => {
   const isLoading = useSubscribe("messages");
   const [message, setMessage] = React.useState("");
   const messages = useFind(() => MessagesCollection.find());
+  
+  const filter = new badWords({ list: ["palavrão1", "palavrão2"] });
 
   if (isLoading()) {
     return <div>Loading...</div>;
@@ -15,6 +18,13 @@ export const Message = () => {
 
   function createMessage(event) {
     event.preventDefault();
+
+    if (filter.isProfane(message)) {
+      alert(
+        "Mensagem contém palavras inadequadas. Por favor, revise sua mensagem antes de enviar."
+      );
+      return;
+    }
 
     Meteor.call("message.insert", message);
     setMessage("");
